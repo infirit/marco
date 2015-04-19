@@ -781,10 +781,9 @@ meta_frames_lookup_window (MetaFrames *frames,
 }
 
 void
-meta_frames_get_geometry (MetaFrames *frames,
-                          Window xwindow,
-                          int *top_height, int *bottom_height,
-                          int *left_width, int *right_width)
+meta_frames_get_borders (MetaFrames *frames,
+                         Window xwindow,
+                         MetaFrameBorders *borders)
 {
   MetaFrameFlags flags;
   MetaUIFrame *frame;
@@ -813,8 +812,7 @@ meta_frames_get_geometry (MetaFrames *frames,
                                 type,
                                 frame->text_height,
                                 flags,
-                                top_height, bottom_height,
-                                left_width, right_width);
+                                borders);
 }
 
 void
@@ -2236,6 +2234,7 @@ populate_cache (MetaFrames *frames,
                 MetaUIFrame *frame)
 {
   int top, bottom, left, right;
+  MetaFrameBorders borders;
   int width, height;
   int frame_width, frame_height, screen_width, screen_height;
   CachedPixels *pixels;
@@ -2265,7 +2264,12 @@ populate_cache (MetaFrames *frames,
                                 frame_type,
                                 frame->text_height,
                                 frame_flags,
-                                &top, &bottom, &left, &right);
+                                &borders);
+
+  top = borders.visible.top;
+  left = borders.visible.left;
+  right = borders.visible.right;
+  bottom = borders.visible.bottom;
 
   pixels = get_cache (frames, frame);
 
@@ -2431,6 +2435,7 @@ subtract_client_area (cairo_region_t *region, MetaUIFrame *frame)
   GdkRectangle area;
   MetaFrameFlags flags;
   MetaFrameType type;
+  MetaFrameBorders borders;
   cairo_region_t *tmp_region;
   Display *display;
 
@@ -2443,8 +2448,11 @@ subtract_client_area (cairo_region_t *region, MetaUIFrame *frame)
                  META_CORE_GET_CLIENT_HEIGHT, &area.height,
                  META_CORE_GET_END);
   meta_theme_get_frame_borders (meta_theme_get_current (),
-                         type, frame->text_height, flags,
-                         &area.x, NULL, &area.y, NULL);
+                                type, frame->text_height, flags,
+                                &borders);
+
+  area.x = borders.visible.left;
+  area.y = borders.visible.top;
 
   tmp_region = cairo_region_create_rectangle (&area);
   cairo_region_subtract (region, tmp_region);
@@ -2579,6 +2587,7 @@ meta_frames_paint_to_drawable (MetaFrames   *frames,
 {
   MetaFrameFlags flags;
   MetaFrameType type;
+  MetaFrameBorders borders;
   GdkPixbuf *mini_icon;
   GdkPixbuf *icon;
   int w, h;
@@ -2708,13 +2717,16 @@ meta_frames_paint_to_drawable (MetaFrames   *frames,
       int n_areas;
       int screen_width, screen_height;
       GdkRegion *edges, *tmp_region;
-      int top, bottom, left, right;
+      int top, left;
 
       /* Repaint each side of the frame */
 
       meta_theme_get_frame_borders (meta_theme_get_current (),
                              type, frame->text_height, flags,
-                             &top, &bottom, &left, &right);
+                             &borders);
+
+      top = borders.visible.top;
+      left = borders.visible.left;
 
       meta_core_get (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), frame->xwindow,
                      META_CORE_GET_SCREEN_WIDTH, &screen_width,

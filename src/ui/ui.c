@@ -361,14 +361,11 @@ meta_ui_free (MetaUI *ui)
 }
 
 void
-meta_ui_get_frame_geometry (MetaUI *ui,
-                            Window frame_xwindow,
-                            int *top_height, int *bottom_height,
-                            int *left_width, int *right_width)
+meta_ui_get_frame_borders (MetaUI *ui,
+                           Window frame_xwindow,
+                           MetaFrameBorders *borders)
 {
-  meta_frames_get_geometry (ui->frames, frame_xwindow,
-                            top_height, bottom_height,
-                            left_width, right_width);
+  meta_frames_get_borders (ui->frames, frame_xwindow, borders);
 }
 
 Window
@@ -964,13 +961,10 @@ meta_text_property_to_utf8 (Display             *xdisplay,
 }
 
 void
-meta_ui_theme_get_frame_borders (MetaUI *ui,
-                                 MetaFrameType      type,
-                                 MetaFrameFlags     flags,
-                                 int               *top_height,
-                                 int               *bottom_height,
-                                 int               *left_width,
-                                 int               *right_width)
+meta_ui_theme_get_frame_borders (MetaUI           *ui,
+                                 MetaFrameType     type,
+                                 MetaFrameFlags    flags,
+                                 MetaFrameBorders *borders)
 {
   int text_height;
 #if GTK_CHECK_VERSION (3, 0, 0)
@@ -1013,8 +1007,7 @@ meta_ui_theme_get_frame_borders (MetaUI *ui,
 
       meta_theme_get_frame_borders (meta_theme_get_current (),
                                     type, text_height, flags,
-                                    top_height, bottom_height,
-                                    left_width, right_width);
+                                    borders);
 
 #if GTK_CHECK_VERSION (3, 0, 0)
       if (free_font_desc)
@@ -1023,7 +1016,10 @@ meta_ui_theme_get_frame_borders (MetaUI *ui,
     }
   else
     {
-      *top_height = *bottom_height = *left_width = *right_width = 0;
+      borders->visible.top = 0;
+      borders->visible.bottom = 0;
+      borders->visible.left = 0;
+      borders->visible.right = 0;
     }
 
 #if GTK_CHECK_VERSION (3, 0, 0)
