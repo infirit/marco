@@ -105,6 +105,13 @@ void meta_ui_apply_frame_shape  (MetaUI  *ui,
                                  int      new_window_height,
                                  gboolean window_has_shape);
 
+void meta_ui_get_corner_radiuses (MetaUI *ui,
+                                  Window  xwindow,
+                                  float  *top_left,
+                                  float  *top_right,
+                                  float  *bottom_left,
+                                  float  *bottom_right);
+
 void meta_ui_queue_frame_draw (MetaUI *ui,
                                Window xwindow);
 

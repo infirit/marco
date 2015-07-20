@@ -59,6 +59,12 @@ void     meta_frame_queue_draw              (MetaFrame  *frame);
 
 MetaFrameFlags meta_frame_get_flags (MetaFrame *frame);
 
+void meta_frame_get_corner_radiuses (MetaFrame *frame,
+                                     float     *top_left,
+                                     float     *top_right,
+                                     float     *bottom_left,
+                                     float     *bottom_right);
+
 /* These should ONLY be called from meta_window_move_resize_internal */
 void meta_frame_calc_borders       (MetaFrame         *frame,
                                     MetaFrameBorders  *borders);

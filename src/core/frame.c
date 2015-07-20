@@ -333,6 +333,19 @@ update_shape (MetaFrame *frame)
 }
 
 void
+meta_frame_get_corner_radiuses (MetaFrame *frame,
+                                float     *top_left,
+                                float     *top_right,
+                                float     *bottom_left,
+                                float     *bottom_right)
+{
+  meta_ui_get_corner_radiuses (frame->window->screen->ui,
+                               frame->xwindow,
+                               top_left, top_right,
+                               bottom_left, bottom_right);
+}
+
+void
 meta_frame_sync_to_window (MetaFrame *frame,
                            int        resize_gravity,
                            gboolean   need_move,

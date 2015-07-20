@@ -154,6 +154,14 @@ void meta_frames_apply_shapes (MetaFrames *frames,
                                int         new_window_width,
                                int         new_window_height,
                                gboolean    window_has_shape);
+
+void meta_frames_get_corner_radiuses (MetaFrames *frames,
+                                      Window      xwindow,
+                                      float      *top_left,
+                                      float      *top_right,
+                                      float      *bottom_left,
+                                      float      *bottom_right);
+
 void meta_frames_move_resize_frame (MetaFrames *frames,
 				    Window      xwindow,
 				    int         x,
