@@ -70,38 +70,7 @@ static GtkLabelClass *parent_class = NULL;
 
 
 
-#if GTK_CHECK_VERSION(3, 0, 0)
-
 G_DEFINE_TYPE (MetaAccelLabel, meta_accel_label, GTK_TYPE_LABEL);
-
-#else
-
-GType
-meta_accel_label_get_type (void)
-{
-  static GType accel_label_type = 0;
-
-  if (!accel_label_type)
-    {
-      static const GtkTypeInfo accel_label_info =
-      {
-	"MetaAccelLabel",
-	sizeof (MetaAccelLabel),
-	sizeof (MetaAccelLabelClass),
-	(GtkClassInitFunc) meta_accel_label_class_init,
-	(GtkObjectInitFunc) meta_accel_label_init,
-        /* reserved_1 */ NULL,
-	/* reserved_2 */ NULL,
-	(GtkClassInitFunc) NULL,
-      };
-
-      accel_label_type = gtk_type_unique (GTK_TYPE_LABEL, &accel_label_info);
-    }
-
-  return accel_label_type;
-}
-
-#endif
 
 static void
 meta_accel_label_class_init (MetaAccelLabelClass *class)

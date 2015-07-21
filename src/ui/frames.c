@@ -46,7 +46,6 @@
     #define gdk_region_rectangle cairo_region_create_rectangle
     #define gdk_region_offset cairo_region_translate
     #define gdk_region_intersect cairo_region_intersect
-    G_DEFINE_TYPE (MetaFrames, meta_frames, GTK_TYPE_INVISIBLE);
     #define parent_class meta_frames_parent_class
 #endif
 
@@ -131,35 +130,10 @@ static void invalidate_whole_window (MetaFrames *frames,
                                      MetaUIFrame *frame);
 
 #if !GTK_CHECK_VERSION(3, 0, 0)
-
 static GtkWidgetClass *parent_class = NULL;
-
-GType
-meta_frames_get_type (void)
-{
-  static GType frames_type = 0;
-
-  if (!frames_type)
-    {
-      static const GtkTypeInfo frames_info =
-      {
-        "MetaFrames",
-        sizeof (MetaFrames),
-        sizeof (MetaFramesClass),
-        (GtkClassInitFunc) meta_frames_class_init,
-        (GtkObjectInitFunc) meta_frames_init,
-        /* reserved_1 */ NULL,
-        /* reserved_2 */ NULL,
-        (GtkClassInitFunc) NULL,
-      };
-
-      frames_type = gtk_type_unique (GTK_TYPE_WINDOW, &frames_info);
-    }
-
-  return frames_type;
-}
-
 #endif
+
+G_DEFINE_TYPE (MetaFrames, meta_frames, GTK_TYPE_INVISIBLE);
 
 static void
 meta_frames_class_init (MetaFramesClass *class)

@@ -56,41 +56,12 @@ static void     meta_preview_finalize      (GObject          *object);
 #define NO_CHILD_HEIGHT 20
 
 #if GTK_CHECK_VERSION(3, 0, 0)
+#define parent_class meta_preview_parent_class
+#else
+static GtkWidgetClass *parent_class;
+#endif
 
 G_DEFINE_TYPE (MetaPreview, meta_preview, GTK_TYPE_BIN);
-#define parent_class meta_preview_parent_class
-
-#else
-
-static GtkWidgetClass *parent_class;
-
-
-GType
-meta_preview_get_type (void)
-{
-  static GType preview_type = 0;
-
-  if (!preview_type)
-    {
-      static const GtkTypeInfo preview_info =
-      {
-       "MetaPreview",
-       sizeof (MetaPreview),
-       sizeof (MetaPreviewClass),
-       (GtkClassInitFunc) meta_preview_class_init,
-       (GtkObjectInitFunc) meta_preview_init,
-    /* reserved_1 */ NULL,
-        /* reserved_2 */ NULL,
-        (GtkClassInitFunc) NULL,
-      };
-
-      preview_type = gtk_type_unique (GTK_TYPE_BIN, &preview_info);
-    }
-
-  return preview_type;
-}
-
-#endif
 
 static void
 meta_preview_class_init (MetaPreviewClass *class)
