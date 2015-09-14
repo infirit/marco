@@ -195,8 +195,14 @@ int      meta_ui_get_drag_threshold       (MetaUI *ui);
 MetaUIDirection meta_ui_get_direction (void);
 
 #if !GTK_CHECK_VERSION (3, 0, 0)
-GdkPixbuf *meta_ui_get_pixbuf_from_pixmap (Pixmap   pmap);
+GdkPixbuf *gdk_pixbuf_get_from_surface (cairo_surface_t *surface,
+                                        gint             src_x,
+                                        gint             src_y,
+                                        gint             width,
+                                        gint             height);
 #endif
+
+GdkPixbuf *meta_ui_get_pixbuf_from_surface (cairo_surface_t *surface);
 
 #include "tabpopup.h"
 #include "tile-preview.h"
