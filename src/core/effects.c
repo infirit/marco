@@ -179,13 +179,17 @@ create_effect (MetaEffectType      type,
 }
 
 /**
- * Destroys an effect.
+ * Destroys an effect.  If the effect has a "finished" hook, it will be
+ * called before cleanup.
  *
  * \param effect  The effect.
  */
 static void
 effect_free (MetaEffect *effect)
 {
+  /*if (effect->priv->finished)
+    effect->priv->finished (effect->priv->finished_data);*/
+
   g_free (effect->priv);
   g_free (effect);
 }
