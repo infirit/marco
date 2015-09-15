@@ -67,7 +67,6 @@
 #endif
 
 #define META_MINIMIZE_ANIMATION_LENGTH 0.25
-#define META_UNMINIMIZE_ANIMATION_LENGTH 0.25
 #define META_SHADE_ANIMATION_LENGTH 0.2
 
 #include <string.h>
@@ -98,9 +97,6 @@ typedef struct
 
   MetaRectangle start_rect;
   MetaRectangle end_rect;
-
-  MetaEffectFinished finished;
-  gpointer finished_data;
 
 } BoxAnimationContext;
 
@@ -153,9 +149,7 @@ static void
 draw_box_animation (MetaScreen     *screen,
                     MetaRectangle  *initial_rect,
                     MetaRectangle  *destination_rect,
-                    double          seconds_duration,
-                    MetaEffectFinished finished,
-                    gpointer        finished_data);
+                    double          seconds_duration);
 
 /**
  * Creates an effect.
@@ -187,8 +181,8 @@ create_effect (MetaEffectType      type,
 static void
 effect_free (MetaEffect *effect)
 {
-  /*if (effect->priv->finished)
-    effect->priv->finished (effect->priv->finished_data);*/
+  if (effect->priv->finished)
+    effect->priv->finished (effect->priv->finished_data);
 
   g_free (effect->priv);
   g_free (effect);
@@ -389,8 +383,6 @@ effects_draw_box_animation_timeout (BoxAnimationContext *context)
 
       graphics_sync (context);
 
-      context->finished(context->finished_data);
-
       g_free (context);
       return FALSE;
     }
@@ -438,9 +430,7 @@ void
 draw_box_animation (MetaScreen     *screen,
                     MetaRectangle  *initial_rect,
                     MetaRectangle  *destination_rect,
-                    double          seconds_duration,
-                    MetaEffectFinished finished,
-                    gpointer        finished_data)
+                    double          seconds_duration)
 {
   BoxAnimationContext *context;
 
@@ -464,9 +454,6 @@ draw_box_animation (MetaScreen     *screen,
 
   context->start_rect = *initial_rect;
   context->end_rect = *destination_rect;
-
-  context->finished = finished;
-  context->finished_data = finished_data;
 
 #ifdef HAVE_SHAPE
 
@@ -730,17 +717,13 @@ run_default_effect_handler (MetaEffect *effect)
        draw_box_animation (effect->window->screen,
                      &(effect->u.minimize.window_rect),
                      &(effect->u.minimize.icon_rect),
-                     META_MINIMIZE_ANIMATION_LENGTH,
-                     effect->priv->finished,
-                     effect->priv->finished_data);
+                     META_MINIMIZE_ANIMATION_LENGTH);
        break;
     case META_EFFECT_UNMINIMIZE:
        draw_box_animation (effect->window->screen,
                      &(effect->u.minimize.icon_rect),
                      &(effect->u.minimize.window_rect),
-                     META_UNMINIMIZE_ANIMATION_LENGTH,
-                     effect->priv->finished,
-                     effect->priv->finished_data);
+                     META_MINIMIZE_ANIMATION_LENGTH);
        break;
 
     default:
